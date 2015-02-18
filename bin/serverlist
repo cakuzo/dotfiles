@@ -1,0 +1,42 @@
+#!/bin/bash 
+#
+# locations:
+# aws = amazon web services
+# int = internal / office servers
+# sol = softlayer
+#
+# environments:
+# prod = production
+# test = test environment
+# dev  = development environment
+# ...
+
+serverlist() {
+#location  environment  ostype  ipaddress     hostname
+#sol       test         ubuntu  10.10.20.21   bigserver
+cat <<EOF
+aws prod ubuntu 10.200.10.200  awsserver1
+aws test ubuntu 10.100.10.100  awsserver2
+int test centos 192.168.4.175  testserver
+int prod debian 192.168.4.240  internalserver0
+int prod ubuntu 192.168.4.11   internalserver1
+sol prod ubuntu 10.70.141.46   importantserver2
+EOF
+}
+
+export servers=$(serverlist | awk '{print $5}' | tr "\n" " ")
+export servers_prod=$(serverlist | grep " prod " | awk '{print $5}' | tr "\n" " ")
+export servers_test=$(serverlist | grep " test " | awk '{print $5}' | tr "\n" " ")
+export servers_deb=$(serverlist | grep -E " ubuntu | debian " | awk '{print $5}' | tr "\n" " ")
+export servers_rpm=$(serverlist | grep -E " redhat | centos " | awk '{print $5}' | tr "\n" " ")
+export servers_ubuntu=$(serverlist | grep -E " ubuntu " | awk '{print $5}' | tr "\n" " ")
+export servers_debian=$(serverlist | grep -E " debian " | awk '{print $5}' | tr "\n" " ")
+export servers_redhat=$(serverlist | grep -E " redhat " | awk '{print $5}' | tr "\n" " ")
+export servers_centos=$(serverlist | grep -E " centos " | awk '{print $5}' | tr "\n" " ")
+
+generate_knownhosts() {
+  for i in $servers
+  do
+     ssh -n -o StrictHostKeyChecking=no $i "uname -a"
+  done
+}
