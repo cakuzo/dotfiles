@@ -28,8 +28,8 @@ done
 # It should be active right away, so try it on the settings window. :)
 #
 # .config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml
-#   <property name="&lt;Primary&gt;&lt;Shift&gt;Right" type="string" value="move-to-next-monitor"/>
-#   <property name="&lt;Primary&gt;&lt;Shift&gt;Left" type="string" value="move-to-next-monitor"/>
+#   <property name="&lt;Alt&gt;&lt;Shift&gt;Right" type="string" value="move-to-next-monitor"/>
+#   <property name="&lt;Alt&gt;&lt;Shift&gt;Left" type="string" value="move-to-next-monitor"/>
 
 
 screen_width=`xdpyinfo | awk '/dimensions:/ { print $2; exit }' | cut -d"x" -f1`
