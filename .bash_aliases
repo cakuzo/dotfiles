@@ -71,7 +71,7 @@ alias tn="tmux new-session -s"
 # vagrant
 alias vup="vagrant up"
 alias vssh="vagrant ssh"
-alias vussh="vagrant up && ssh"
+alias vussh="vagrant up && vagrant ssh"
 alias vhalt="vagrant halt"
 alias vstat="vagrant global-status"
 alias vdestroy="vagrant destroy"
