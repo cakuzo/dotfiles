@@ -1,3 +1,9 @@
+########################
+# SETTINGS             #
+########################
+stty -echoctl
+
+
 # date format for file
 fdate() {
   date +'%Y%m%d_%H%M%S'
@@ -56,6 +62,9 @@ niceman() {
     evince ${1}.ps
   fi
 }
+
+# apt
+alias apt-get="sudo apt-get"
 
 # core
 alias ll="ls -l --color=auto"
