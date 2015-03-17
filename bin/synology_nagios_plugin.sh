@@ -109,10 +109,10 @@ else
             exit 2
         fi 
 
-        model=$(echo "$syno" | grep $OID_model | cut -d "=" -f2)
-        serialNumber=$(echo "$syno" | grep $OID_serialNumber | cut -d "=" -f2)
-        DSMVersion=$(echo "$syno" | grep $OID_DSMVersion | cut -d "=" -f2)
-        upgradeAvailable=$(echo "$syno" | grep $OID_upgradeAvailable | cut -d "=" -f2)
+        model=$(echo "$syno" | grep $OID_model | cut -d "=" -f2 | tr -d '"' )
+        serialNumber=$(echo "$syno" | grep $OID_serialNumber | cut -d "=" -f2 | tr -d '"' )
+        DSMVersion=$(echo "$syno" | grep $OID_DSMVersion | cut -d "=" -f2 | tr -d '"' )
+        upgradeAvailable=$(echo "$syno" | grep $OID_upgradeAvailable | cut -d "=" -f2 | tr -d '"' )
 
         if [ "$upgradeAvailable" -eq "1" ] ; then OID_upgradeAvailable="Available"     healthStatus=3 ;   fi
         if [ "$upgradeAvailable" -eq "2" ] ; then  OID_upgradeAvailable="Unavailable"  healthStatus=0 ;   fi
@@ -201,7 +201,7 @@ else
 
     #Check all RAID volume status
     for i in `seq 1 $nbRAID`; do
-        RAIDName[$i]=$(echo "$syno" | grep $OID_RAIDName.$(($i-1)) | cut -d "=" -f2)
+        RAIDName[$i]=$(echo "$syno" | grep $OID_RAIDName.$(($i-1)) | cut -d "=" -f2 | tr -d '"' )
         RAIDStatus[$i]=$(echo "$syno" | grep $OID_RAIDStatus.$(($i-1)) | cut -d "=" -f2 | sed 's/^[ \t]*//;s/[ \t]*$//')
 
         if [ "${RAIDStatus[$i]}" != "1" ] ; then
@@ -237,11 +237,11 @@ else
 
     # VERBOSE AND LEGACY OUTPUT
     if [ "$verbose" = "yes" ]; then 
-        if [ $legacyDSM == "0" ]; then
+        if [ $legacyDSM -eq 0 ]; then
             echo "Synology model:   $model"
             echo "Synology s/n:     $serialNumber"
-            echo "DSM Version:      $DSMVersion"
-            echo "DSM Version update:     $OID_upgradeAvailable"
+            echo "DSM version:      $DSMVersion"
+            echo "DSM update:        $OID_upgradeAvailable"
         fi
         echo "System Status:     $systemStatus"
         echo "Power Status:      $powerStatus"
