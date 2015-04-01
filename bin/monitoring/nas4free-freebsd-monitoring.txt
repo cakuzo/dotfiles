@@ -1,0 +1,48 @@
+#############
+# NRPE
+#############
+
+pkg install nrpe
+
+### NRPE CONFIG /usr/local/etc/nrpe.cfg
+log_facility=daemon
+pid_file=/var/run/nrpe2/nrpe2.pid
+server_port=5666
+nrpe_user=nagios
+nrpe_group=nagios
+allowed_hosts=127.0.0.1,192.168.2.2
+dont_blame_nrpe=1
+allow_bash_command_substitution=0
+debug=0
+command_timeout=60
+connection_timeout=300
+command[check_users]=/usr/local/libexec/nagios/check_users -w 5 -c 10
+command[check_zombie_procs]=/usr/local/libexec/nagios/check_procs -w 5 -c 10 -s Z
+command[check_total_procs]=/usr/local/libexec/nagios/check_procs -w 150 -c 200 
+command[check_load]=/usr/local/libexec/nagios/check_load -w 24,24,24 -c 30.0,28.8,27.6
+command[check_disks]=/usr/local/libexec/nagios/check_disk -l -w 20% -c 5% -X tmpfs -X devfs -X procfs
+command[check_swap]=/usr/local/libexec/nagios/check_swap -w $ARG1$ -c $ARG2$
+command[check_mem]=/usr/local/libexec/nagios/check_mem -f -C -w 20 -c 10
+
+### NRPE START
+/usr/local/sbin/nrpe2 -d -c /usr/local/etc/nrpe.cfg
+
+##############
+### SNMP 
+##############
+
+pkg install snmp
+pkg install net-snmp
+
+### SNMP CONFIG /usr/local/etc/snmp/snmpd.conf
+agentAddress  udp:0.0.0.0:161
+view   systemonly  included   .1.3.6.1.2.1.1
+view   systemonly  included   .1.3.6.1.2.1.25.1
+rocommunity public
+rouser   authOnlyUser
+sysLocation    Sitting on the Dock of the Bay
+sysContact     Me <me@example.org>
+includeAllDisks  10%
+
+### SNMP START
+/usr/local/sbin/snmpd -Lsd -Lf /dev/null -Cc /usr/local/etc/snmp/snmpd.conf -I -p /var/run/snmpd.pid
